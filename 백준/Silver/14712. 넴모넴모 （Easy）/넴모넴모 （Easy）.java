@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,20 +44,23 @@ public class Main {
 	}
 
 	public static void DFS(int cnt) {
-		if(cnt==I*J) {
+		if(cnt==I*J){
 			res++;
 			return;
 		}
 
-		int nowI = cnt / J + 1;
-		int nowJ = cnt % J + 1;
+		int nextI = cnt/J+1;
+		int nextJ = cnt%J+1;
 
-		//넴모가 아닌 경우
-		if(!arr[nowI][nowJ-1] | !arr[nowI-1][nowJ-1] | !arr[nowI-1][nowJ]) {
-			arr[nowI][nowJ] = true;
+		//넴모일 때
+		if(arr[nextI][nextJ-1] == true && arr[nextI-1][nextJ] == true  && arr[nextI-1][nextJ-1] == true ){
+			arr[nextI][nextJ] = false;
+			DFS(cnt+1);
+		}else{
+			arr[nextI][nextJ] = false;
+			DFS(cnt+1);
+			arr[nextI][nextJ] = true;
 			DFS(cnt+1);
 		}
-		arr[nowI][nowJ] = false;
-		DFS(cnt+1);
 	}
 }
