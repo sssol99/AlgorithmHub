@@ -24,10 +24,13 @@ public class Main {
 			arr[i][2] = arr[i-3][0] + arr[i-3][1] + arr[i-3][2];
 		}
 
+		StringBuilder sb = new StringBuilder();
+
 		for(int t = 0; t < tk ; t++){
 			int N = Integer.parseInt(br.readLine());
 
-			System.out.println(arr[N][0]+arr[N][1]+arr[N][2]);
+			sb.append(arr[N][0]+arr[N][1]+arr[N][2]+"\n");
 		}
+		System.out.println(sb);
 	}
 }
