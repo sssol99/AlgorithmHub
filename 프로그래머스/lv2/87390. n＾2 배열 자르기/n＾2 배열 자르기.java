@@ -2,9 +2,6 @@ class Solution {
     public int[] solution(int n, long left, long right) {
         int[] answer = new int[(int)(right-left)+1];
 
-        long endI = right/n;
-        long endJ = right%n;
-
         int idx = 0; 
         while(left <= right){
             
@@ -17,7 +14,6 @@ class Solution {
             left++;
             idx++;
         }
-        
         return answer;
     }
 }
