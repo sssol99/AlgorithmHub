@@ -52,12 +52,12 @@ public class Main {
 		DFS(B,0,tmp);
 
 		//A->B
-
-		findDiameter(A,B,0,new boolean[N+1]);
+		System.out.println(maxCost);
 
 	}
 
 	public static void DFS(int start, int cost, boolean[] ck){
+		
 		if(cost > maxCost){
 			maxCost = cost;
 			A = start;
@@ -72,18 +72,4 @@ public class Main {
 
 	}
 
-	public static void findDiameter(int start, int des, int cost, boolean[] ck){
-		if(start==des){
-			System.out.println(cost);
-			System.exit(0);
-		}
-
-		for(int i = 0 ; i < tree[start].size() ; i++){
-			if(ck[tree[start].get(i).end]) continue;
-			ck[tree[start].get(i).end] = true;
-			findDiameter(tree[start].get(i).end, des,cost+tree[start].get(i).cost,ck);
-			ck[tree[start].get(i).end] = false;
-		}
-
-	}
 }
