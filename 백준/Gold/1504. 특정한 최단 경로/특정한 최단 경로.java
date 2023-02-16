@@ -1,4 +1,3 @@
-
 import javax.xml.soap.Node;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,8 +7,8 @@ import java.util.*;
 public class Main {
 	static class Node implements Comparable<Node> {
 		int start;
-		long cost;
-		public Node(int start, long cost) {
+		int cost;
+		public Node(int start, int cost) {
 			this.start = start;
 			this.cost = cost;
 		}
@@ -54,13 +53,13 @@ public class Main {
 		int node1 = Integer.parseInt(stk.nextToken());
 		int node2 = Integer.parseInt(stk.nextToken());
 
-		long res1 = -1;
-		long res2 = -1;
+		int res1 = -1;
+		int res2 = -1;
 
 		// 1 -> 노드1 -> 노드2 -> N
-		long tmp1 = dykstra(1,node1);
-		long tmp2 = dykstra(node1,node2); 
-		long tmp3 = dykstra(node2,N);
+		int tmp1 = dykstra(1,node1);
+		int tmp2 = dykstra(node1,node2);
+		int tmp3 = dykstra(node2,N);
 		
 		if(tmp1 == 999999999 | tmp2 == 999999999 | tmp3 == 999999999) res1 = -1;
 		else res1 = tmp1+tmp2+tmp3;
@@ -89,9 +88,9 @@ public class Main {
 		}
 	}
 
-	public static long dykstra(int s, int e){
+	public static int dykstra(int s, int e){
 		PriorityQueue<Node> q = new PriorityQueue<>();
-		long[] dis = new long[N+1];
+		int[] dis = new int[N+1];
 		boolean[] visited = new boolean[N+1];
 
 		Arrays.fill(dis,999999999);
