@@ -1,0 +1,91 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
+
+public class Main {
+	static class Mandoo implements Comparable<Mandoo>{
+		int cnt;
+		int needFlour;
+		int price;
+
+		public Mandoo(int meetGram, int needGram, int needFlour, int price) {
+			this.cnt = meetGram / needGram;
+			this.needFlour = needFlour;
+			this.price = price;
+		}
+//
+//		@Override
+//		public int compareTo(Mandoo o) {
+//			double thisP = (double) this.price/this.needFlour;
+//			double oP = (double) o.price/o.needFlour;
+//
+//			if(oP == thisP){
+//				return this.cnt-o.cnt;
+//			}
+//			return -Double.compare(oP,thisP);
+//		}
+
+		@Override
+		public int compareTo(Mandoo o){
+			return this.price-o.price;
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer stk = new StringTokenizer(br.readLine());
+
+		int flour = Integer.parseInt(stk.nextToken());
+		int mandooCnt = Integer.parseInt(stk.nextToken());
+		int specialFlourGram = Integer.parseInt(stk.nextToken());
+		int specialPrice = Integer.parseInt(stk.nextToken());
+
+		Mandoo[] mandoos = new Mandoo[mandooCnt+2];
+
+		int[][] dp = new int[mandooCnt+2][flour+1];
+
+		for(int i = 1 ; i <= mandooCnt ; i++){
+			stk = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(stk.nextToken());
+			int b = Integer.parseInt(stk.nextToken());
+			int c = Integer.parseInt(stk.nextToken());
+			int d = Integer.parseInt(stk.nextToken());
+
+			mandoos[i] = new Mandoo(a,b,c,d);
+		}
+
+		mandoos[mandooCnt+1] = new Mandoo(flour,1,specialFlourGram,specialPrice);
+		mandoos[0] = new Mandoo(0,1,1,0);
+
+		//Arrays.sort(mandoos);
+
+		//만들수있는 개수 : mandoo[i].meetGram / mandoo[i].needGram
+		//점화식 : dp[i][j] = Math.max(dp[i-1][j], dp[i-1][j-최만개] + 최만개*mandoo[i].price)
+		//최만개 : 현재 밀가루에서 만들 수 있는 최대 만두 개수 ( 단, 최대 만두 개수는 mandoo[i].cnt를 넘지 않음)
+
+		for(int i = 0 ; i <= mandooCnt+1 ; i++) dp[i][0] = 0;
+		for(int j = 0 ; j < flour+1 ; j++) dp[0][j] = 0;
+
+		for(int i = 1 ; i <= mandooCnt+1 ; i++){
+			for(int j = 1 ; j < flour+1 ; j++){
+				int cmg = CMG(j,mandoos[i]);
+				for(int k = 0 ; k <= cmg; k++){
+					//만두속 기준
+					int nextJ = Math.max(j-k* mandoos[i].needFlour,0);
+					dp[i][j] = Math.max(dp[i][j],Math.max(dp[i-1][j], dp[i-1][nextJ] + k*mandoos[i].price));
+				}
+			}
+		}
+
+		System.out.println(dp[mandooCnt+1][flour]);
+
+	}
+
+	//현재 밀가루에서 만들 수 있는 최대 만두 개수를 구하는 메서드!
+	public static int CMG(int flour, Mandoo mandoo){
+		return Math.min(flour/ mandoo.needFlour , mandoo.cnt);
+	}
+}
