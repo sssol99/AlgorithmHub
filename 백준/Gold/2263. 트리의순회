@@ -1,0 +1,76 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class Main {
+
+	static int N;
+	static int LV;
+
+	static int [] inOrder;
+
+	static int [] postOrder;
+
+	static HashMap<Integer,Integer> map = new HashMap();
+
+	static StringBuilder sb = new StringBuilder();
+
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		N = Integer.parseInt(br.readLine());
+
+		LV = (int)(Math.log10(LV)/Math.log10(2));
+
+		StringTokenizer stk;
+
+		inOrder = new int[N];
+
+		postOrder = new int[N];
+
+		stk = new StringTokenizer(br.readLine());
+		for(int i = 0 ; i < N ; i++){
+			inOrder[i] = Integer.parseInt(stk.nextToken());
+			map.put(inOrder[i],i);
+		}
+
+		stk = new StringTokenizer(br.readLine());
+		for(int i = 0 ; i < N ; i++){
+			postOrder[i] = Integer.parseInt(stk.nextToken());
+		}
+
+		Rec(0,N-1,0,N-1);
+		System.out.println(sb);
+
+
+	}
+
+	// 중위순회 루트이하뭉치 시작인덱스 : s
+	// 중위순회 루트이하뭉치 끝인덱스 : e
+	// 후위순회 루트이하뭉치 시작인덱스 : postS
+	// 후위순회 루트이하뭉치 끝인덱스 : postE
+	public static void Rec(int sIdx, int eIdx , int postSIdx, int postEIdx){
+
+		if(sIdx > eIdx || postSIdx > postEIdx) return;
+
+		//루트값은 후위순회의 맨끝
+		int root = postOrder[postEIdx];
+
+		sb.append(root).append(" ");
+
+		//인오더의 root값에 해당하는 인덱스
+		int rootIdx = map.get(root);
+
+		//왼쪽자식수는 중위순회의 왼쪽 개수
+		int leftCnt = rootIdx-sIdx;
+		//오른쪽 자식수는 중위순회의 오른쪽 개수
+		//int rightCnt = eIdx-rootIdx;
+
+
+		Rec(sIdx, rootIdx-1, postSIdx, postSIdx+leftCnt-1);
+		Rec(rootIdx+1, eIdx, postSIdx+leftCnt, postEIdx-1);
+
+	}
+}
