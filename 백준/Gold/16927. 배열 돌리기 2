@@ -1,0 +1,113 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
+
+public class Main {
+
+	static int dI[] = {0,1,0,-1};
+	static int dJ[] = {1,0,-1,0};
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+
+		int I = read();
+		int J = read();
+		int R = read();
+
+		int[][] arr = new int[I][J];
+
+		for (int n = 0; n < I; n++) for (int m = 0; m < J; m++) arr[n][m] = read();
+
+
+		int lv = 0;
+		int min = Integer.min(I,J);
+		while(lv < min/2){
+			//현재 레벨에 노드 몇개 있는지 찾기
+			int CNT = findCnt(I,J,lv);
+			//최소 몇번 돌려야 되는지 찾기
+			if(CNT==0) break;
+			if(I==2  & lv==1 | J==2 & lv==1) break;
+			int rot = R % CNT;
+
+			//배열 돌리기 시작
+
+			//해당 LV 에 속하는 모든 배열을 한 줄로 만들기
+			ArrayList<Integer> nums= makeArr(lv,CNT,arr, I,J);
+
+			int nowI = lv;
+			int nowJ = lv;
+			int dir = 0;
+
+			//하나씩 밀어서 배열에 넣기
+			for(int i = 0 ; i < CNT ; i++) {
+				arr[nowI][nowJ] = nums.get((i+rot)%nums.size());
+
+				int nextI = nowI + dI[dir%4];
+				int nextJ = nowJ + dJ[dir%4];
+
+				if(nextI < lv | nextI >= I-lv | nextJ < lv | nextJ >= J-lv) {
+					dir++;
+					nextI = nowI + dI[dir%4];
+					nextJ = nowJ + dJ[dir%4];
+				}
+
+				nowI = nextI;
+				nowJ = nextJ;
+			}
+			lv++;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0 ; i < I ; i++){
+			for(int j = 0 ; j < J ; j++){
+				sb.append(arr[i][j]).append(" ");
+			}
+			sb.append('\n');
+		}
+
+		System.out.println(sb);
+
+	}
+
+	//현재 LV에 노드가 몇개 있는지
+	public static int findCnt(int I, int J, int lv){
+		return 2*(I-lv*2) + 2*(J-lv*2) - 4;
+	}
+
+	public static ArrayList<Integer> makeArr(int lv, int CNT, int[][] arr, int I, int J){
+		int nowI = lv;
+		int nowJ = lv;
+
+		ArrayList<Integer> nums= new ArrayList<>();
+		int dir = 0;
+		for(int i = 0 ; i < CNT ; i++) {
+			nums.add(arr[nowI][nowJ]);
+
+			int nextI = nowI + dI[dir%4];
+			int nextJ = nowJ + dJ[dir%4];
+
+			if(nextI < lv | nextI >= I-lv | nextJ < lv | nextJ >= J-lv) {
+				dir++;
+				nextI = nowI + dI[dir%4];
+				nextJ = nowJ + dJ[dir%4];
+			}
+
+			nowI = nextI;
+			nowJ = nextJ;
+		}
+		nums.toString();
+		return nums;
+	}
+
+	static int read() throws Exception {
+		int c, n = System.in.read() & 15;
+		while ((c = System.in.read()) > 32)
+			n = (n << 3) + (n << 1) + (c & 15);
+		return n;
+	}
+}
